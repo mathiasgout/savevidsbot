@@ -1,11 +1,13 @@
 # SaveVidsBot
 
+Projet arrêté car il n'y a plus de free tier
+
 ## Version 2
 - Mise en place d'un API avec `FastAPI` pour le backend.
 - Migration vers une base de donnée SQL `postgreSQL` 
 - Mise en place de tests avec `pytest` pour le backend et le bot
-- Il manque la mise en place de `NGINX` pour le deploiement du backend
-- Il manque le frontend, mais le projet est annulé car l'API twitter est maintenant payante
+- Il manque la mise en place de `NGINX` pour le deploiement du backend (voir branche `v1`)
+- Il manque le frontend (voir branche `v1` pour un frontend à base de template `Flask`)
 
 ### Fichiers à ajouter pour rendre le projet fonctionnel
 
