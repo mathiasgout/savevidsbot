@@ -37,5 +37,5 @@
 - `website/flask_app/db/gcp_credentials.json`:
     - Clés d'un compte de service `GCP` qui à les droits d'écriture et lecture `Firebase`
 - `website/nginx/ssl/certs/savevidsbot_com_chain.crt`
-- `website/nginx/ssl/certs/server.key`
+- `website/nginx/ssl/certs/server.crt`
 - `website/nginx/ssl/private/server.key`
