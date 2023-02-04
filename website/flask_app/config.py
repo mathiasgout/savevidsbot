@@ -7,17 +7,18 @@ dotenv.load_dotenv(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".e
 
 class Config:
     """Base config."""
-    SECRET_KEY = os.environ.get('SECRET_KEY')
-    SESSION_COOKIE_NAME = os.environ.get('SESSION_COOKIE_NAME')
+
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    SESSION_COOKIE_NAME = os.environ.get("SESSION_COOKIE_NAME")
     SESSION_COOKIE_SECURE = True
-    STATIC_FOLDER = 'static'
-    TEMPLATES_FOLDER = 'templates'
+    STATIC_FOLDER = "static"
+    TEMPLATES_FOLDER = "templates"
     VIDEOS_PER_PAGE = 4
 
 
 class ProdConfig(Config):
-    ENV = 'production'
-    FLASK_ENV = 'production'
+    ENV = "production"
+    FLASK_ENV = "production"
     DEBUG = False
     TESTING = False
     VIDEOS_COLLECTION = "videos"
@@ -31,8 +32,8 @@ class ProdConfig(Config):
 
 
 class DevConfig(Config):
-    ENV = 'development'
-    FLASK_ENV = 'development'
+    ENV = "development"
+    FLASK_ENV = "development"
     DEBUG = True
     TESTING = True
     VIDEOS_COLLECTION = "videos-dev"

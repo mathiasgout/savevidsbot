@@ -8,7 +8,7 @@ import tweepy
 class DeleteUserTweets:
     def __init__(self, config) -> None:
         self.config = config
-    
+
     @exception(logger)
     def _get_twitter_api(self) -> tweepy.API:
         """Return Twitter API object
@@ -16,10 +16,15 @@ class DeleteUserTweets:
             tweepy.API: API twitter
         """
 
-        auth = tweepy.OAuthHandler(self.config["TWITTER_API_KEY"], self.config["TWITTER_API_KEY_SECRET"])
-        auth.set_access_token(self.config["TWITTER_ACCESS_TOKEN"], self.config["TWITTER_ACCESS_TOKEN_SECRET"]) 
+        auth = tweepy.OAuthHandler(
+            self.config["TWITTER_API_KEY"], self.config["TWITTER_API_KEY_SECRET"]
+        )
+        auth.set_access_token(
+            self.config["TWITTER_ACCESS_TOKEN"],
+            self.config["TWITTER_ACCESS_TOKEN_SECRET"],
+        )
         twitter_api = tweepy.API(auth, wait_on_rate_limit=True)
-    
+
         return twitter_api
 
     @exception(logger)

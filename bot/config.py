@@ -15,7 +15,7 @@ class ProdConfig:
     USERS_COLLECTION = "users"
     BANNED_COLLECTION = "banned"
     URL_PREFIX = "https://savevidsbot.com/videos/"
-    
+
 
 class DevConfig:
     TWITTER_API_KEY = os.environ.get("TWITTER_API_KEY_DEV")

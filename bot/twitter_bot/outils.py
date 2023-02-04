@@ -32,7 +32,9 @@ class NewStatusHandler:
 
                     # Extract infos from tweet
                     tweet_info = self._extract_infos_from_status(status=status)
-                    tweet_info_reply = self._extract_infos_from_status(status=in_reply_status)
+                    tweet_info_reply = self._extract_infos_from_status(
+                        status=in_reply_status
+                    )
 
                     # Check if the user is banned
                     if self._is_banned_user(user_id=str(tweet_info["user_id"])):
@@ -46,16 +48,19 @@ class NewStatusHandler:
                         video_url=urls["video_url"],
                         thumbnail_url=urls["thumbnail_url"],
                         tweet_id=tweet_info_reply["tweet_id"],
-                        tweet_url=f'https://twitter.com/twitter/statuses/{tweet_info_reply["tweet_id"]}', 
-                        user_id=tweet_info_reply["user_id"], 
+                        tweet_url=f'https://twitter.com/twitter/statuses/{tweet_info_reply["tweet_id"]}',
+                        user_id=tweet_info_reply["user_id"],
                         screen_name=tweet_info_reply["screen_name"],
                         text=tweet_info_reply["text"],
-                        asked_at=tweet_info_reply["asked_at"])
+                        asked_at=tweet_info_reply["asked_at"],
+                    )
 
                     # Post status with url to download page if video was asked less than 6 times
                     if asked_count < 6:
                         text = f'{tweet_info["screen_name"]} Download link here! \n{os.path.join(self.config.URL_PREFIX, str(tweet_info_reply["tweet_id"]))}'
-                        status_id = self._post_reply_status(text=text, tweet_id=status.id)
+                        status_id = self._post_reply_status(
+                            text=text, tweet_id=status.id
+                        )
                     else:
                         logger.info(f"no reply sent, asked_count : {asked_count}")
 
@@ -63,9 +68,13 @@ class NewStatusHandler:
                     edit_user_document(
                         collection_name=self.config.USERS_COLLECTION,
                         document_name=tweet_info["screen_name"][1:],
-                        requested_video={"video_id":tweet_info_reply["tweet_id"], "reply_tweet_id":str(status_id)},
+                        requested_video={
+                            "video_id": tweet_info_reply["tweet_id"],
+                            "reply_tweet_id": str(status_id),
+                        },
                         screen_name=tweet_info["screen_name"],
-                        user_id=tweet_info["user_id"])
+                        user_id=tweet_info["user_id"],
+                    )
 
         except Exception as e:
             logger.error(f"Error occured : {e}")
@@ -77,10 +86,14 @@ class NewStatusHandler:
             tweepy.API: API twitter
         """
 
-        auth = tweepy.OAuthHandler(self.config.TWITTER_API_KEY, self.config.TWITTER_API_KEY_SECRET)
-        auth.set_access_token(self.config.TWITTER_ACCESS_TOKEN, self.config.TWITTER_ACCESS_TOKEN_SECRET) 
+        auth = tweepy.OAuthHandler(
+            self.config.TWITTER_API_KEY, self.config.TWITTER_API_KEY_SECRET
+        )
+        auth.set_access_token(
+            self.config.TWITTER_ACCESS_TOKEN, self.config.TWITTER_ACCESS_TOKEN_SECRET
+        )
         twitter_api = tweepy.API(auth, wait_on_rate_limit=True)
-        
+
         return twitter_api
 
     @exception(logger)
@@ -113,7 +126,9 @@ class NewStatusHandler:
         return status
 
     @exception(logger)
-    def _get_video_urls_from_status(self, status: tweepy.models.Status) -> Dict[str, str]:
+    def _get_video_urls_from_status(
+        self, status: tweepy.models.Status
+    ) -> Dict[str, str]:
         """Get video url (video or gif) and video thumbnail from tweet
         Args:
             tweet (tweepy.models.Status): a tweet
@@ -138,10 +153,13 @@ class NewStatusHandler:
             # Garde la vidéo de meilleure qualité
             if bitrate_url:
                 logger.debug("video found in tweet status")
-                return {"video_url":bitrate_url[max(bitrate_url.keys())], "thumbnail_url":thumbnail_url}
+                return {
+                    "video_url": bitrate_url[max(bitrate_url.keys())],
+                    "thumbnail_url": thumbnail_url,
+                }
         logger.debug("no video found in tweet status")
-        return {}  
-    
+        return {}
+
     @exception(logger)
     def _extract_infos_from_status(self, status: tweepy.models.Status) -> Dict:
         """Extract informations from tweet status
@@ -154,14 +172,16 @@ class NewStatusHandler:
         tweet_info["tweet_id"] = str(status.id)
         tweet_info["user_id"] = str(status.user.id)
         tweet_info["screen_name"] = f"@{status.user.screen_name.lower()}"
-        tweet_info["asked_at"] = int(datetime.datetime.timestamp(datetime.datetime.now()))
+        tweet_info["asked_at"] = int(
+            datetime.datetime.timestamp(datetime.datetime.now())
+        )
         if hasattr(status, "full_text"):
             text_split = status.full_text.split(" ")[:-1]
         else:
             text_split = status.text.split(" ")[:-1]
         tweet_info["text"] = " ".join(text_split)
         logger.debug(f"infos from status with id : {tweet_info['tweet_id']} extracted ")
-        
+
         return tweet_info
 
     @exception(logger)
@@ -179,7 +199,9 @@ class NewStatusHandler:
 
     @exception(logger)
     def _is_banned_user(self, user_id: str) -> bool:
-        banned_user = get_document(collection_name=self.config.BANNED_COLLECTION, document_name=user_id)
+        banned_user = get_document(
+            collection_name=self.config.BANNED_COLLECTION, document_name=user_id
+        )
         if banned_user is not None:
             return True
         return False

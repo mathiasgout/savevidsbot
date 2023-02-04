@@ -6,14 +6,14 @@ import tweepy
 
 
 class Streamer(tweepy.Stream):
-
     def __init__(self, config, **kwargs):
         super().__init__(
-            config.TWITTER_API_KEY, 
-            config.TWITTER_API_KEY_SECRET, 
-            config.TWITTER_ACCESS_TOKEN, 
-            config.TWITTER_ACCESS_TOKEN_SECRET, 
-            **kwargs)
+            config.TWITTER_API_KEY,
+            config.TWITTER_API_KEY_SECRET,
+            config.TWITTER_ACCESS_TOKEN,
+            config.TWITTER_ACCESS_TOKEN_SECRET,
+            **kwargs,
+        )
         self.config = config
 
     @exception(logger)
