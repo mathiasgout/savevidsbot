@@ -1,41 +1,36 @@
 # SaveVidsBot
 
-## Version 1
-- Frontend et backend liés grâce à `Flask` et ses templates
-- Base de donnée NoSQL `Cloud Firestore` (via `Firebase`)
-- Utilisation de `NGINX` pour déployer le site
-- Bot développé à l'aide du SDK python de l'API twitter : `tweepy`
-- Le bot et le site sont conteneurisés dans des conteneurs `Docker`
+## Version 2
+- Mise en place d'un API avec `FastAPI` pour le backend.
+- Migration vers une base de donnée SQL `postgreSQL` 
+- Mise en place de tests avec `pytest` pour le backend et le bot
+- Il manque la mise en place de `NGINX` pour le deploiement du backend
+- Il manque le frontend, mais le projet est annulé car l'API twitter est maintenant payante
 
-### Fichiers à ajouter pour rendre le projet fonctionnel 
+### Fichiers à ajouter pour rendre le projet fonctionnel
 
-#### Bot: 
-- `bot/.env`:
-    - `TWITTER_API_KEY_PROD: str`
-    - `TWITTER_API_KEY_SECRET_PROD: str`
-    - `TWITTER_ACCESS_TOKEN_PROD: str`
-    - `TWITTER_ACCESS_TOKEN_SECRET_PROD: str`
-    - `TWITTER_API_KEY_DEV: str`
-    - `TWITTER_API_KEY_SECRET_DEV: str`
-    - `TWITTER_ACCESS_TOKEN_DEV: str`
-    - `TWITTER_ACCESS_TOKEN_SECRET_DEV: str` 
-- `bot/db/gcp_credentials.json`:
-    - Clés d'un compte de service `GCP` qui à les droits d'écriture et lecture `Firebase`
+#### Bot
+- `bot/bot/.env`:
+    - `URL_PREFIX: str`
+    - `API_PREFIX: str`
+    - `TRACK: str`
+    - `TWITTER_API_KEY: str`    
+    - `TWITTER_API_KEY_SECRET: str`
+    - `TWITTER_ACCESS_TOKEN: str`
+    - `TWITTER_ACCESS_TOKEN_SECRET: str`
 
-#### Website
-- `website/flask_app/.env`:
+#### Backend
+- `backend/app/.env`:
     - `SECRET_KEY: str`
-    - `SESSION_COOKIE_NAME: mftmnlqCzp`
-    - `TWITTER_API_KEY_PROD: str`
-    - `TWITTER_API_KEY_SECRET_PROD: str`
-    - `TWITTER_ACCESS_TOKEN_PROD: str`
-    - `TWITTER_ACCESS_TOKEN_SECRET_PROD: str`
-    - `TWITTER_API_KEY_DEV: str`
-    - `TWITTER_API_KEY_SECRET_DEV: str`
-    - `TWITTER_ACCESS_TOKEN_DEV: str`
-    - `TWITTER_ACCESS_TOKEN_SECRET_DEV: str`
-- `website/flask_app/db/gcp_credentials.json`:
-    - Clés d'un compte de service `GCP` qui à les droits d'écriture et lecture `Firebase`
-- `website/nginx/ssl/certs/savevidsbot_com_chain.crt`
-- `website/nginx/ssl/certs/server.key`
-- `website/nginx/ssl/private/server.key`
+    - `TWITTER_API_KEY: str`    
+    - `TWITTER_API_KEY_SECRET: str`
+    - `TWITTER_ACCESS_TOKEN: str`
+    - `TWITTER_ACCESS_TOKEN_SECRET: str`
+- `backend/app/database.ini`:
+    - Fichier `.ini` avec une section nommée `[postgresql]`
+    - Paramètres dans la section `[postgresql]`:
+        - `host: str`
+        - `port: int`
+        - `database: str`
+        - `user: str`
+        - `password: str`
