@@ -1,6 +1,6 @@
 # SaveVidsBot
 
-Projet arrêté car il n'y a plus de free tier
+Projet arrêté car il n'y a plus de free tier de l'API twitter 
 
 ## Version 2
 - Mise en place d'un API avec `FastAPI` pour le backend.
