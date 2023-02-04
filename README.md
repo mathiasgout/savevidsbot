@@ -25,7 +25,7 @@
 #### Website
 - `website/flask_app/.env`:
     - `SECRET_KEY: str`
-    - `SESSION_COOKIE_NAME: mftmnlqCzp`
+    - `SESSION_COOKIE_NAME: str`
     - `TWITTER_API_KEY_PROD: str`
     - `TWITTER_API_KEY_SECRET_PROD: str`
     - `TWITTER_ACCESS_TOKEN_PROD: str`
