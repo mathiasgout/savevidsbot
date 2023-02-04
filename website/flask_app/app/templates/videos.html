@@ -1,0 +1,23 @@
+{% extends "base.html" %} 
+
+{% block og %}
+<meta property="og:title" content="{{ text }}">
+<meta property="og:description" content="{{ text }}">
+<meta property="og:url" content="https://savevidsbot.com/videos/{{ tweet_id }}">
+<meta property="og:video" content="{{ video_url }}">
+{% endblock og %}
+
+{% block title %} SaveVidsBot {% endblock title %} 
+
+{%block content %}
+
+    <div class="border border-secondary rounded-lg embed-responsive embed-responsive-16by9">
+        <video id="video" class="" loop="loop" controls="" poster="{{ thumbnail_url }}">
+            <source src="{{ video_url }}" type="video/mp4">
+        </video>
+    </div>
+    <div class="mt-2 d-flex justify-content-between">
+        <div class="font-weight-lighter">video posted by <b><i><a href="{{ tweet_url }}" class="text-dark">{{ creator }}</a></i></b></div>    
+    </div>
+    <button type="button" class="btn btn-primary btn-lg btn-block mt-2" onclick="download('{{ video_url }}')">Download</button>
+{% endblock content %}

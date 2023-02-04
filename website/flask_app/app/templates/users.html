@@ -1,0 +1,48 @@
+{% extends "base.html" %} 
+{% block title %} SaveVidsBot {% endblock title %}
+
+{% block og %}
+<meta property="og:title" content="@{{ screen_name }}">
+<meta property="og:description" content="@{{ screen_name }}">
+{% endblock og %}
+
+{%block content %}
+<div class="text-center mb-3 font-italic">
+    <h2><i><a href="https://twitter.com/{{ screen_name }}" class="text-dark">@{{ screen_name }}</a></i></h2>
+</div>
+
+<div class="row mb-4">
+    {% for video in user_videos %}
+    <div class="col-lg-6 pb-3">
+        <div class="border border-secondary rounded-lg">
+            <div class="embed-responsive embed-responsive-16by9">
+                <video id="video" class="" loop="loop" controls="" poster="{{ video['thumbnail_url'] }}">
+                    <source src="{{ video['video_url'] }}" type="video/mp4">
+                </video>
+            </div>
+            <div class="mt-2 d-flex justify-content-between">
+                <div class="pl-2 font-weight-lighter">video posted by <b><i><a href="{{ video['tweet_url'] }}" class="text-dark"> {{ video['creator'] }} </a></i></b></div>    
+            </div>
+            <button type="button" class="btn btn-primary btn-lg btn-block mt-2" onclick="download(`{{ video['video_url'] }}`)">Download</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="d-flex justify-content-center">
+    <ul class="pagination">
+        {% if page==1 %}
+        <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('views.users', screen_name=screen_name, page=page-1) }}">Previous</a></li>
+        {% endif %}
+
+        {% if last_page %}
+        <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('views.users', screen_name=screen_name, page=page+1) }}">Next</a></li>
+        {% endif %}
+    </ul>
+</div>
+
+{% endblock content %}

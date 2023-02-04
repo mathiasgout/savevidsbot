@@ -1,0 +1,36 @@
+{% extends "base.html" %} 
+
+{% block og %}
+<meta property="og:title" content="SaveVidsBot - Save videos from Twitter">
+<meta property="og:description" content="With SaveVidsBot, save the best Twitter videos">
+{% endblock og %}
+
+{% block title %} SaveVidsBot {% endblock title %} 
+
+{%block content %}
+<div class="text-center">
+    <div class="mb-5">
+        <h1>Welcome to SaveVidsBot</h1>
+        <p class="lead mb-1">Save videos from Twitter</p>
+        <p class="font-weight-lighter font-italic">No NSFW videos</p>
+    </div>
+</div>
+<div>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-danger alter-dismissable fade show" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+    <form class="d-flex" method="POST">
+        <input class="form-control mr-2" type="search" minlength="5" maxlength="16" placeholder="Search for your @username" aria-label="Search" id="user_search" name="user_search">
+        <button class="btn btn-outline-dark" type="submit">Search</button>
+    </form>
+</div>
+{% endblock content %}
