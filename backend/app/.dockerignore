@@ -1,0 +1,11 @@
+.vscode
+.pytest_cache
+__pycache__
+api/__pycache__
+api/routers/__pycache__
+api/internal/__pycache__
+api/tools/__pycache__
+error_tool/__pycache__
+tests
+.coverage
+things.py
