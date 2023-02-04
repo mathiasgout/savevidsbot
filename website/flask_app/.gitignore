@@ -1,7 +1,0 @@
-.DS_Store
-__pycache__
-venv
-.vscode
-.env
-db/gcp_credentials.json
-log
