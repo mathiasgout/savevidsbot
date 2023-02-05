@@ -123,6 +123,7 @@ def test_post_GOOD_VIDEO():
             "creator_user_id": "999",
             "video_url": "https://video_url.com9",
         },
+        headers={"Authorization": "Bearer good-token"},
     )
     assert response.status_code == 200
     assert response.json() == {
@@ -150,6 +151,7 @@ def test_post_ALREADY_REGISTRED_VIDEO():
             "creator_user_id": "111",
             "video_url": "https://video_url.com",
         },
+        headers={"Authorization": "Bearer good-token"},
     )
     assert response.status_code == 400
     assert response.json() == {"detail": "Video with tweet_id : 111 already registred"}

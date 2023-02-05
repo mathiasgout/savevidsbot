@@ -15,7 +15,7 @@ router = APIRouter(
 # GET
 @router.get("/{user_id}", response_model=schemas.Banned)
 async def read_banned(
-    user_id: str = Path(min_length=3, regex="^[0-9]*$"),
+    user_id: str = Path(min_length=1, regex="^[0-9]*$"),
     db: Session = Depends(dependencies.get_db),
 ):
     """Get a banned user
@@ -41,11 +41,13 @@ async def read_banned(
 async def create_banned(
     banned: schemas.BannedCreate,
     db: Session = Depends(dependencies.get_db),
+    current_admin: schemas.Admin = Depends(dependencies.get_current_admin),
 ):
     """Create a banned user
     Args:
         banned (schemas.BannedCreate): schemas.BannedCreate instance
         db (Session, optional): DB session. Defaults to Depends(dependencies.get_db).
+        current_admin (schemas.Admin, optional): to check admin authentication. Defaults to Depends(dependencies.get_current_admin).
 
     Raises:
         HTTPException: HTTP 404

@@ -165,7 +165,9 @@ def test_get_screen_name_videos_GOOD_USER_SKIP_LIMIT():
 # POST
 def test_post_GOOD_USER():
     response = client.post(
-        "/api/v2/users", json={"screen_name": "mouloud", "user_id": "100"}
+        "/api/v2/users",
+        json={"screen_name": "mouloud", "user_id": "100"},
+        headers={"Authorization": "Bearer good-token"},
     )
     assert response.status_code == 200
     assert response.json() == {"screen_name": "mouloud", "user_id": "100", "id": 6}
@@ -173,7 +175,9 @@ def test_post_GOOD_USER():
 
 def test_post_ALREADY_REGISTRED_USER():
     response = client.post(
-        "/api/v2/users", json={"screen_name": "david", "user_id": "3"}
+        "/api/v2/users",
+        json={"screen_name": "david", "user_id": "3"},
+        headers={"Authorization": "Bearer good-token"},
     )
     assert response.status_code == 400
     assert response.json() == {
@@ -185,6 +189,7 @@ def test_post_screen_name_videos_link_GOOD_USER_GOOD_VIDEO():
     response = client.post(
         "/api/v2/users/olivier/videos_link",
         json={"tweet_id": "111", "reply_tweet_id": "9989"},
+        headers={"Authorization": "Bearer good-token"},
     )
     assert response.status_code == 200
     assert response.json()["tweet_id"] == "111"
@@ -196,6 +201,7 @@ def test_post_screen_name_videos_link_GOOD_USER_WRONG_VIDEO():
     response = client.post(
         "/api/v2/users/olivier/videos_link",
         json={"tweet_id": "9999", "reply_tweet_id": "23929"},
+        headers={"Authorization": "Bearer good-token"},
     )
     assert response.status_code == 404
     assert response.json() == {"detail": "User or video not found"}
@@ -205,6 +211,7 @@ def test_post_screen_name_videos_link_WRONG_USER_GOOD_VIDEO():
     response = client.post(
         "/api/v2/users/tristan/videos_link",
         json={"tweet_id": "222", "reply_tweet_id": "48239"},
+        headers={"Authorization": "Bearer good-token"},
     )
     assert response.status_code == 404
     assert response.json() == {"detail": "User or video not found"}
@@ -214,6 +221,7 @@ def test_post_screen_name_videos_link_ALREADY_REGISTRED():
     response = client.post(
         "/api/v2/users/david/videos_link",
         json={"tweet_id": "111", "reply_tweet_id": "0001"},
+        headers={"Authorization": "Bearer good-token"},
     )
     assert response.status_code == 400
     assert response.json() == {
@@ -281,7 +289,10 @@ def test_delete_screen_name_NO_AUTH():
 
 
 def test_delete_screen_name_videos_link_video_id_GOOD_USER_GOOD_VIDEO_TWEET_FALSE():
-    response = client.delete("/api/v2/users/david/videos_link/111?tweet=false")
+    response = client.delete(
+        "/api/v2/users/david/videos_link/111?tweet=false",
+        headers={"Authorization": "Bearer good-token"},
+    )
     assert response.status_code == 200
     assert response.json()["tweet_id"] == "111"
     assert response.json()["reply_tweet_id"] == "0001"
@@ -289,7 +300,10 @@ def test_delete_screen_name_videos_link_video_id_GOOD_USER_GOOD_VIDEO_TWEET_FALS
 
 
 def test_delete_screen_name_videos_link_video_id_GOOD_USER_GOOD_VIDEO_TWEET_TRUE():
-    response = client.delete("/api/v2/users/david/videos_link/222?tweet=true")
+    response = client.delete(
+        "/api/v2/users/david/videos_link/222?tweet=true",
+        headers={"Authorization": "Bearer good-token"},
+    )
     settings = overrided_dependencies.override_get_settings()
 
     # Check pour voir si "twitter_tools.delete_tweet" a été executé (la fonction est mocké)
@@ -303,12 +317,18 @@ def test_delete_screen_name_videos_link_video_id_GOOD_USER_GOOD_VIDEO_TWEET_TRUE
 
 
 def test_delete_screen_name_videos_link_video_id_GOOD_USER_WRONG_VIDEO():
-    response = client.delete("/api/v2/users/david/videos_link/99092?tweet=false")
+    response = client.delete(
+        "/api/v2/users/david/videos_link/99092?tweet=false",
+        headers={"Authorization": "Bearer good-token"},
+    )
     assert response.status_code == 404
     assert response.json() == {"detail": "Videouserlink not found"}
 
 
 def test_delete_screen_name_videos_link_video_id_WRONG_USER_GOOD_VIDEO():
-    response = client.delete("/api/v2/users/tristan/videos_link/222?tweet=false")
+    response = client.delete(
+        "/api/v2/users/tristan/videos_link/222?tweet=false",
+        headers={"Authorization": "Bearer good-token"},
+    )
     assert response.status_code == 404
     assert response.json() == {"detail": "Videouserlink not found"}

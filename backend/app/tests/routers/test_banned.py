@@ -8,6 +8,9 @@ from fastapi.testclient import TestClient
 
 
 app.dependency_overrides[dependencies.get_db] = overrided_dependencies.override_get_db
+app.dependency_overrides[
+    dependencies.get_current_admin
+] = overrided_dependencies.override_get_current_admin
 
 client = TestClient(app)
 
@@ -59,20 +62,32 @@ def test_get_user_id_WRONG_USER():
 
 # POST
 def test_post_user_id_ban_GOOD_USER():
-    response = client.post("/api/v2/banned", json={"user_id": "222", "reason": "DRUG"})
+    response = client.post(
+        "/api/v2/banned",
+        json={"user_id": "222", "reason": "DRUG"},
+        headers={"Authorization": "Bearer good-token"},
+    )
     assert response.status_code == 200
     assert response.json()["user_id"] == "222"
     assert response.json()["reason"] == "DRUG"
 
 
 def test_post_user_id_ban_GOOD_USER_REBAN():
-    response = client.post("/api/v2/banned", json={"user_id": "111", "reason": "DRUG"})
+    response = client.post(
+        "/api/v2/banned",
+        json={"user_id": "111", "reason": "DRUG"},
+        headers={"Authorization": "Bearer good-token"},
+    )
     assert response.status_code == 200
     assert response.json()["user_id"] == "111"
     assert response.json()["reason"] == "DRUG"
 
 
 def test_post_user_id_ban_WRONG_USER():
-    response = client.post("/api/v2/banned", json={"user_id": "555", "reason": "DRUG"})
+    response = client.post(
+        "/api/v2/banned",
+        json={"user_id": "555", "reason": "DRUG"},
+        headers={"Authorization": "Bearer good-token"},
+    )
     assert response.status_code == 404
     assert response.json() == {"detail": "User not found"}

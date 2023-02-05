@@ -17,7 +17,7 @@ router = APIRouter(
 # GET
 @router.get("/{video_id}", response_model=schemas.Video)
 async def read_video(
-    video_id: str = Path(min_length=3, regex="^[0-9]*$"),
+    video_id: str = Path(min_length=1, regex="^[0-9]*$"),
     db: Session = Depends(dependencies.get_db),
 ):
     """Get a video
@@ -40,9 +40,9 @@ async def read_video(
 
 @router.get("/{video_id}/users_link", response_model=List[schemas.VideoUserLink])
 async def get_links_between_user_and_video_by_tweet_id(
-    video_id: str = Path(min_length=3, regex="^[0-9]*$"),
+    video_id: str = Path(min_length=1, regex="^[0-9]*$"),
     skip: int = Query(default=0, ge=0),
-    limit: int = Query(default=100, ge=0),
+    limit: int = Query(default=12, ge=0, le=12),
     db: Session = Depends(dependencies.get_db),
 ):
     """Get videouserlinks between by tweet_id
@@ -67,7 +67,7 @@ async def get_links_between_user_and_video_by_tweet_id(
 
 @router.get("/{video_id}/videos_count", response_model=schemas.UserVideoCountTweetId)
 async def get_video_count_of_video(
-    video_id: str = Path(min_length=3, regex="^[0-9]*$"),
+    video_id: str = Path(min_length=1, regex="^[0-9]*$"),
     db: Session = Depends(dependencies.get_db),
 ):
     """Get the request count of a video
@@ -91,13 +91,16 @@ async def get_video_count_of_video(
 # POST
 @router.post("", response_model=schemas.Video)
 async def create_video(
-    video: schemas.VideoCreate, db: Session = Depends(dependencies.get_db)
+    video: schemas.VideoCreate,
+    db: Session = Depends(dependencies.get_db),
+    current_admin: schemas.Admin = Depends(dependencies.get_current_admin),
 ):
     """Create a video
 
     Args:
         video (schemas.VideoCreate): VideoCreate instance.
         db (Session, optional): DB session. Defaults to Depends(dependencies.get_db).
+        current_admin (schemas.Admin, optional): to check admin authentication. Defaults to Depends(dependencies.get_current_admin).
 
     Raises:
         HTTPException: HTTP 400
@@ -117,7 +120,7 @@ async def create_video(
 # DELETE
 @router.delete("/{video_id}", response_model=schemas.VideoDeleted)
 async def delete_video(
-    video_id: str = Path(min_length=3, regex="^[0-9]*$"),
+    video_id: str = Path(min_length=1, regex="^[0-9]*$"),
     tweet: bool = Query(default=False),
     db: Session = Depends(dependencies.get_db),
     settings: config.Settings = Depends(config.get_settings),

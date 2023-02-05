@@ -17,7 +17,7 @@ router = APIRouter(
 # GET
 @router.get("/{screen_name}", response_model=schemas.User)
 async def read_user(
-    screen_name: str = Path(min_length=5), db: Session = Depends(dependencies.get_db)
+    screen_name: str = Path(min_length=1), db: Session = Depends(dependencies.get_db)
 ):
     """Get a user
 
@@ -41,8 +41,8 @@ async def read_user(
     "/{screen_name}/videos_link/{video_id}", response_model=schemas.VideoUserLink
 )
 async def get_link_between_user_and_video_by_screen_name_and_tweet_id(
-    screen_name: str = Path(min_length=5),
-    video_id: str = Path(min_length=3, regex="^[0-9]*$"),
+    screen_name: str = Path(min_length=1),
+    video_id: str = Path(min_length=1, regex="^[0-9]*$"),
     db: Session = Depends(dependencies.get_db),
 ):
     """Get videouserlink by user screen_name and video tweet_id
@@ -73,9 +73,9 @@ async def get_link_between_user_and_video_by_screen_name_and_tweet_id(
 
 @router.get("/{screen_name}/videos_link", response_model=List[schemas.VideoUserLink])
 async def get_links_between_user_and_video_by_screen_name(
-    screen_name: str = Path(min_length=5),
+    screen_name: str = Path(min_length=1),
     skip: int = Query(default=0, ge=0),
-    limit: int = Query(default=100, ge=0),
+    limit: int = Query(default=12, ge=0, le=12),
     db: Session = Depends(dependencies.get_db),
 ):
     """Get videouserlinks by screen_name
@@ -102,7 +102,7 @@ async def get_links_between_user_and_video_by_screen_name(
     "/{screen_name}/videos_count", response_model=schemas.UserVideoCountScreenName
 )
 async def get_video_count_of_user(
-    screen_name: str = Path(min_length=5), db: Session = Depends(dependencies.get_db)
+    screen_name: str = Path(min_length=1), db: Session = Depends(dependencies.get_db)
 ):
     """Get the count of videos requested by an user
 
@@ -124,9 +124,9 @@ async def get_video_count_of_user(
 
 @router.get("/{screen_name}/videos", response_model=schemas.UserVideos)
 async def get_videos_requested_by_user_by_screen_name(
-    screen_name: str = Path(min_length=5),
+    screen_name: str = Path(min_length=1),
     skip: int = Query(default=0, ge=0),
-    limit: int = Query(default=100, ge=0),
+    limit: int = Query(default=12, ge=0, le=12),
     db: Session = Depends(dependencies.get_db),
 ):
     """Get video requested by user
@@ -158,13 +158,16 @@ async def get_videos_requested_by_user_by_screen_name(
 # POST
 @router.post("", response_model=schemas.User)
 async def create_user(
-    user: schemas.UserCreate, db: Session = Depends(dependencies.get_db)
+    user: schemas.UserCreate,
+    db: Session = Depends(dependencies.get_db),
+    current_admin: schemas.Admin = Depends(dependencies.get_current_admin),
 ):
     """Create an user
 
     Args:
         user (schemas.UserCreate): UserCreate instance
         db (Session, optional): DB session. Defaults to Depends(dependencies.get_db).
+        current_admin (schemas.Admin, optional): to check admin authentication. Defaults to Depends(dependencies.get_current_admin).
 
     Raises:
         HTTPException: HTTP 400
@@ -184,8 +187,9 @@ async def create_user(
 @router.post("/{screen_name}/videos_link", response_model=schemas.VideoUserLink)
 async def create_link_between_user_and_video(
     videouserlink: schemas.VideoUserLinkCreate,
-    screen_name: str = Path(min_length=5),
+    screen_name: str = Path(min_length=1),
     db: Session = Depends(dependencies.get_db),
+    current_admin: schemas.Admin = Depends(dependencies.get_current_admin),
 ):
     """Create a link between an user and a video
 
@@ -193,6 +197,7 @@ async def create_link_between_user_and_video(
         screen_name (str): user screen_name
         videouserlink (schemas.VideoUserLinkCreate): video information and twitter reply tweet id.
         db (Session, optional): DB Session. Defaults to Depends(dependencies.get_db).
+        current_admin (schemas.Admin, optional): to check admin authentication. Defaults to Depends(dependencies.get_current_admin).
 
     Raises:
         HTTPException: HTTP 404
@@ -227,7 +232,7 @@ async def create_link_between_user_and_video(
 # DELETE
 @router.delete("/{screen_name}", response_model=schemas.UserDeleted)
 async def delete_user(
-    screen_name: str = Path(min_length=5),
+    screen_name: str = Path(min_length=1),
     tweet: bool = Query(default=False),
     db: Session = Depends(dependencies.get_db),
     settings: config.Settings = Depends(config.get_settings),
@@ -290,11 +295,12 @@ async def delete_user(
     "/{screen_name}/videos_link/{video_id}", response_model=schemas.VideoUserLink
 )
 async def delete_link_between_user_and_video_by_screen_name_and_tweet_id(
-    screen_name: str = Path(min_length=5),
+    screen_name: str = Path(min_length=1),
     tweet: bool = Query(default=False),
-    video_id: str = Path(min_length=3, regex="^[0-9]*$"),
+    video_id: str = Path(min_length=1, regex="^[0-9]*$"),
     db: Session = Depends(dependencies.get_db),
     settings: config.Settings = Depends(config.get_settings),
+    current_admin: schemas.Admin = Depends(dependencies.get_current_admin),
 ):
     """Delete videouserlink by screen_name and tweet_id
 
