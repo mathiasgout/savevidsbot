@@ -28,12 +28,13 @@ def is_banned_user(settings: config.Settings, user_id: str) -> bool:
 @exception(logger)
 @retry(Exception, tries=3, delay=3, logger=logger)
 def create_video_if_doesnt_exist(
-    settings: config.Settings, video: schemas.VideoCreate
+    settings: config.Settings, access_token: str, video: schemas.VideoCreate
 ) -> bool:
     """Create a Video if it doesn't exist
 
     Args:
         settings (config.Settings): bot settings
+        access_token (str): API access token
         video (schemas.VideoCreate): schemas.VideoCreate instance
 
     Returns:
@@ -45,8 +46,9 @@ def create_video_if_doesnt_exist(
     if r_get_video.status_code == 200:
         return True
 
+    headers = {"Authorization": f"Bearer {access_token}"}
     r_post_video = requests.post(
-        os.path.join(settings.API_PREFIX, "videos"), json=video.dict()
+        os.path.join(settings.API_PREFIX, "videos"), json=video.dict(), headers=headers
     )
     if r_post_video.status_code == 200:
         return True
@@ -56,12 +58,13 @@ def create_video_if_doesnt_exist(
 @exception(logger)
 @retry(Exception, tries=3, delay=3, logger=logger)
 def create_user_if_doesnt_exist(
-    settings: config.Settings, user: schemas.UserCreate
+    settings: config.Settings, access_token: str, user: schemas.UserCreate
 ) -> bool:
     """Create a User if he doesn't exist
 
     Args:
         settings (config.Settings): bot settings
+        access_token (str): API access token
         user (schemas.UserCreate): schemas.UserCreate instance
 
     Returns:
@@ -73,8 +76,9 @@ def create_user_if_doesnt_exist(
     if r_get_user.status_code == 200:
         return True
 
+    headers = {"Authorization": f"Bearer {access_token}"}
     r_post_user = requests.post(
-        os.path.join(settings.API_PREFIX, "users"), json=user.dict()
+        os.path.join(settings.API_PREFIX, "users"), json=user.dict(), headers=headers
     )
     if r_post_user.status_code == 200:
         return True
@@ -85,6 +89,7 @@ def create_user_if_doesnt_exist(
 @retry(Exception, tries=3, delay=3, logger=logger)
 def create_videouserlink(
     settings: config.Settings,
+    access_token: str,
     videouserlink: schemas.VideoUserLinkCreate,
     screen_name: str,
 ) -> bool:
@@ -92,15 +97,18 @@ def create_videouserlink(
 
     Args:
         settings (config.Settings): bot settings
+        access_token (str): API access token
         videouserlink (schemas.VideoUserLinkCreate): schemas.VideoUserLinkCreate instance
         screen_name (str): User screen_name
 
     Returns:
         bool: True if the VideoUserLink is created or already exists, False either
     """
+    headers = {"Authorization": f"Bearer {access_token}"}
     r_post_videouserlink = requests.post(
         os.path.join(settings.API_PREFIX, "users", screen_name, "videos_link"),
         json=videouserlink.dict(),
+        headers=headers,
     )
     if r_post_videouserlink.status_code == 200:
         return True
@@ -149,4 +157,17 @@ def get_video_count_by_tweet_id(
     )
     if r_videos_count.status_code == 200:
         return r_videos_count.json()["videos_count"]
+    return None
+
+
+@exception(logger)
+@retry(Exception, tries=1, delay=3, logger=logger)
+def get_bearer_token(settings: config.Settings) -> Union[None, str]:
+    r_post_login = requests.post(
+        os.path.join(settings.API_PREFIX, "auth", "login"),
+        data={"username": settings.ADMIN_USERNAME, "password": settings.ADMIN_PASSWORD},
+    )
+
+    if r_post_login.status_code == 200:
+        return r_post_login.json()["access_token"]
     return None

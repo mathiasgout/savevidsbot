@@ -151,7 +151,9 @@ def test_handle_new_status_ALL_GOOD(mocker):
     mocker.patch(
         "twitter_bot.tools.twitter_tools.get_status", return_value=in_reply_status
     )
+    mocker.patch("twitter_bot.tools.twitter_tools.get_video_urls_from_status", return_value={"video_url": "video_url", "thumbnail_url":"thumbnail_url"})
     mocker.patch("twitter_bot.tools.api_tools.is_banned_user", return_value=False)
+    mocker.patch("twitter_bot.tools.api_tools.get_bearer_token", return_value="access_token")
     mocker.patch(
         "twitter_bot.tools.api_tools.create_video_if_doesnt_exist", return_value=True
     )
@@ -186,8 +188,10 @@ def test_handle_new_status_NO_REPLY_IN_STATUS(mocker):
     settings = overrided_dependencies.override_get_settings()
 
     # Mocks
-    mocker.patch("twitter_bot.tools.twitter_tools.get_status")
+    mocker.patch("twitter_bot.tools.twitter_tools.get_status", return_value=None)
+    mocker.patch("twitter_bot.tools.twitter_tools.get_video_urls_from_status", return_value={"video_url": "video_url", "thumbnail_url":"thumbnail_url"})
     mocker.patch("twitter_bot.tools.api_tools.is_banned_user", return_value=False)
+    mocker.patch("twitter_bot.tools.api_tools.get_bearer_token", return_value="access_token")
     mocker.patch(
         "twitter_bot.tools.api_tools.create_video_if_doesnt_exist", return_value=True
     )
@@ -223,7 +227,47 @@ def test_handle_new_status_NO_URL(mocker):
     mocker.patch(
         "twitter_bot.tools.twitter_tools.get_status", return_value=in_reply_status
     )
+    mocker.patch("twitter_bot.tools.twitter_tools.get_video_urls_from_status", return_value=None)
     mocker.patch("twitter_bot.tools.api_tools.is_banned_user", return_value=False)
+    mocker.patch("twitter_bot.tools.api_tools.get_bearer_token", return_value="access_token")
+    mocker.patch(
+        "twitter_bot.tools.api_tools.create_video_if_doesnt_exist", return_value=True
+    )
+    mocker.patch(
+        "twitter_bot.tools.api_tools.create_user_if_doesnt_exist", return_value=True
+    )
+    mocker.patch(
+        "twitter_bot.tools.api_tools.get_videouserlink_by_screen_name_and_tweet_id",
+        return_value=False,
+    )
+    mocker.patch(
+        "twitter_bot.tools.api_tools.get_video_count_by_tweet_id", return_value=0
+    )
+    mocker.patch(
+        "twitter_bot.tools.twitter_tools.post_reply_status", return_value="100"
+    )
+    mocker.patch("twitter_bot.tools.api_tools.create_videouserlink", return_value=True)
+
+    assert twitter_tools.handle_new_status(settings=settings, status=status) is False
+
+    # Verif des appels
+    twitter_tools.post_reply_status.assert_not_called()
+
+
+def test_handle_new_status_NO_ACCESS_TOKEN(mocker):
+    status = sample.Status()
+    in_reply_status = sample.StatusComplete()
+    del in_reply_status.extended_entities
+
+    settings = overrided_dependencies.override_get_settings()
+
+    # Mocks
+    mocker.patch(
+        "twitter_bot.tools.twitter_tools.get_status", return_value=in_reply_status
+    )
+    mocker.patch("twitter_bot.tools.twitter_tools.get_video_urls_from_status", return_value={"video_url": "video_url", "thumbnail_url":"thumbnail_url"})
+    mocker.patch("twitter_bot.tools.api_tools.is_banned_user", return_value=False)
+    mocker.patch("twitter_bot.tools.api_tools.get_bearer_token", return_value=None)
     mocker.patch(
         "twitter_bot.tools.api_tools.create_video_if_doesnt_exist", return_value=True
     )
@@ -259,7 +303,9 @@ def test_handle_new_status_POSSIBLY_SENSITIVE(mocker):
     mocker.patch(
         "twitter_bot.tools.twitter_tools.get_status", return_value=in_reply_status
     )
+    mocker.patch("twitter_bot.tools.twitter_tools.get_video_urls_from_status", return_value={"video_url": "video_url", "thumbnail_url":"thumbnail_url"})
     mocker.patch("twitter_bot.tools.api_tools.is_banned_user", return_value=False)
+    mocker.patch("twitter_bot.tools.api_tools.get_bearer_token", return_value="access_token")
     mocker.patch(
         "twitter_bot.tools.api_tools.create_video_if_doesnt_exist", return_value=True
     )
@@ -294,7 +340,9 @@ def test_handle_new_status_BANNED_USER(mocker):
     mocker.patch(
         "twitter_bot.tools.twitter_tools.get_status", return_value=in_reply_status
     )
+    mocker.patch("twitter_bot.tools.twitter_tools.get_video_urls_from_status", return_value={"video_url": "video_url", "thumbnail_url":"thumbnail_url"})
     mocker.patch("twitter_bot.tools.api_tools.is_banned_user", return_value=True)
+    mocker.patch("twitter_bot.tools.api_tools.get_bearer_token", return_value="access_token")
     mocker.patch(
         "twitter_bot.tools.api_tools.create_video_if_doesnt_exist", return_value=True
     )
@@ -329,7 +377,9 @@ def test_handle_new_status_VIDEO_IS_NOT_IN_DB_AND_CANNOT_BE_CREATED(mocker):
     mocker.patch(
         "twitter_bot.tools.twitter_tools.get_status", return_value=in_reply_status
     )
+    mocker.patch("twitter_bot.tools.twitter_tools.get_video_urls_from_status", return_value={"video_url": "video_url", "thumbnail_url":"thumbnail_url"})
     mocker.patch("twitter_bot.tools.api_tools.is_banned_user", return_value=False)
+    mocker.patch("twitter_bot.tools.api_tools.get_bearer_token", return_value="access_token")
     mocker.patch(
         "twitter_bot.tools.api_tools.create_video_if_doesnt_exist", return_value=False
     )
@@ -364,7 +414,9 @@ def test_handle_new_status_USER_IS_NOT_IN_DB_AND_CANNOT_BE_CREATED(mocker):
     mocker.patch(
         "twitter_bot.tools.twitter_tools.get_status", return_value=in_reply_status
     )
+    mocker.patch("twitter_bot.tools.twitter_tools.get_video_urls_from_status", return_value={"video_url": "video_url", "thumbnail_url":"thumbnail_url"})
     mocker.patch("twitter_bot.tools.api_tools.is_banned_user", return_value=False)
+    mocker.patch("twitter_bot.tools.api_tools.get_bearer_token", return_value="access_token")
     mocker.patch(
         "twitter_bot.tools.api_tools.create_video_if_doesnt_exist", return_value=True
     )
@@ -399,7 +451,9 @@ def test_handle_new_status_VIDEO_ALREADY_REQUESTED_BY_USER(mocker):
     mocker.patch(
         "twitter_bot.tools.twitter_tools.get_status", return_value=in_reply_status
     )
+    mocker.patch("twitter_bot.tools.twitter_tools.get_video_urls_from_status", return_value={"video_url": "video_url", "thumbnail_url":"thumbnail_url"})
     mocker.patch("twitter_bot.tools.api_tools.is_banned_user", return_value=False)
+    mocker.patch("twitter_bot.tools.api_tools.get_bearer_token", return_value="access_token")
     mocker.patch(
         "twitter_bot.tools.api_tools.create_video_if_doesnt_exist", return_value=True
     )
@@ -434,7 +488,9 @@ def test_handle_new_status_VIDEO_REQUESTED_TOO_MANY_TIMES(mocker):
     mocker.patch(
         "twitter_bot.tools.twitter_tools.get_status", return_value=in_reply_status
     )
+    mocker.patch("twitter_bot.tools.twitter_tools.get_video_urls_from_status", return_value={"video_url": "video_url", "thumbnail_url":"thumbnail_url"})
     mocker.patch("twitter_bot.tools.api_tools.is_banned_user", return_value=False)
+    mocker.patch("twitter_bot.tools.api_tools.get_bearer_token", return_value="access_token")
     mocker.patch(
         "twitter_bot.tools.api_tools.create_video_if_doesnt_exist", return_value=True
     )
@@ -469,7 +525,9 @@ def test_handle_new_status_LINKS_BETWEEN_USER_AND_VIDEO_NOT_CREATED(mocker):
     mocker.patch(
         "twitter_bot.tools.twitter_tools.get_status", return_value=in_reply_status
     )
+    mocker.patch("twitter_bot.tools.twitter_tools.get_video_urls_from_status", return_value={"video_url": "video_url", "thumbnail_url":"thumbnail_url"})
     mocker.patch("twitter_bot.tools.api_tools.is_banned_user", return_value=False)
+    mocker.patch("twitter_bot.tools.api_tools.get_bearer_token", return_value="access_token")
     mocker.patch(
         "twitter_bot.tools.api_tools.create_video_if_doesnt_exist", return_value=True
     )
@@ -495,5 +553,5 @@ def test_handle_new_status_LINKS_BETWEEN_USER_AND_VIDEO_NOT_CREATED(mocker):
         settings=settings, text="@didier Download link here! \n/2", tweet_id="1"
     )
     api_tools.create_videouserlink.assert_called_once_with(
-        settings=settings, videouserlink=ANY, screen_name="didier"
+        settings=settings, access_token="access_token", videouserlink=ANY, screen_name="didier"
     )

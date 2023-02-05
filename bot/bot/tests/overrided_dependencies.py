@@ -4,6 +4,8 @@ from twitter_bot.config import Settings
 def override_get_settings():
     settings = Settings(
         ASKED_COUNT_MAX=5,
+        ADMIN_USERNAME="admin_username",
+        ADMIN_PASSWORD="admin_password",
         URL_PREFIX="/",
         API_PREFIX="http://0.0.0.0:8000/api/v2",
         TRACK="@testerbot806",

@@ -212,6 +212,14 @@ def handle_new_status(settings: config.Settings, status: tweepy.models.Status) -
                     )
                     return False
 
+                # Get API access token
+                api_access_token = api_tools.get_bearer_token(settings=settings)
+                if not api_access_token:
+                    logger.info(
+                        f"No reply sent to User : '{tweet_info['screen_name']}', access token can not be generated"
+                    )
+                    return False
+
                 # Create video in DB if it doesnt exist
                 video = schemas.VideoCreate(
                     creator_screen_name=tweet_info_reply["screen_name"],
@@ -224,7 +232,7 @@ def handle_new_status(settings: config.Settings, status: tweepy.models.Status) -
                 )
                 if (
                     api_tools.create_video_if_doesnt_exist(
-                        settings=settings, video=video
+                        settings=settings, access_token=api_access_token, video=video
                     )
                     is False
                 ):
@@ -238,7 +246,9 @@ def handle_new_status(settings: config.Settings, status: tweepy.models.Status) -
                     screen_name=tweet_info["screen_name"], user_id=tweet_info["user_id"]
                 )
                 if (
-                    api_tools.create_user_if_doesnt_exist(settings=settings, user=user)
+                    api_tools.create_user_if_doesnt_exist(
+                        settings=settings, access_token=api_access_token, user=user
+                    )
                     is False
                 ):
                     logger.info(
@@ -281,6 +291,7 @@ def handle_new_status(settings: config.Settings, status: tweepy.models.Status) -
                 )
                 api_tools.create_videouserlink(
                     settings=settings,
+                    access_token=api_access_token,
                     videouserlink=videuserlink,
                     screen_name=tweet_info["screen_name"],
                 )

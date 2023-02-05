@@ -14,6 +14,8 @@ class Settings:
     """Base config"""
 
     ASKED_COUNT_MAX: int = 5
+    ADMIN_USERNAME: str = os.environ.get("ADMIN_USERNAME")
+    ADMIN_PASSWORD: str = os.environ.get("ADMIN_PASSWORD")
     URL_PREFIX: str = os.environ.get("URL_PREFIX")
     API_PREFIX: str = os.environ.get("API_PREFIX")
     TRACK: str = os.environ.get("TRACK")
