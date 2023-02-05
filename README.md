@@ -13,6 +13,8 @@ Projet arrêté car il n'y a plus de free tier de l'API twitter
 
 #### Bot
 - `bot/bot/.env`:
+    - `ADMIN_USERNAME: str`
+    - `ADMIN_PASSWORD: str`
     - `URL_PREFIX: str`
     - `API_PREFIX: str`
     - `TRACK: str`
