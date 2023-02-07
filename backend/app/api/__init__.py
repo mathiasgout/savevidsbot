@@ -2,7 +2,6 @@ from api.tools.error_tools import get_logger
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from sqlalchemy.exc import DatabaseError, IntegrityError
 
 
 logger = get_logger(logger_name=__name__)
