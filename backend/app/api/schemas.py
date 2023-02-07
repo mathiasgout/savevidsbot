@@ -75,6 +75,10 @@ class VideoDeleted(BaseModel):
     videouserlink_deleted_count: int
 
 
+class VideoWithTS(Video):
+    asked_at: int
+
+
 class VideoUserLinkBase(BaseModel):
     tweet_id: str
     reply_tweet_id: str

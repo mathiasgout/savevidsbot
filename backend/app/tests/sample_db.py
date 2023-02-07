@@ -125,6 +125,7 @@ def create_sample_dataset(db):
         screen_name="david",
     )  # id=3
 
+    time.sleep(1.5)
     crud_videouserlinks.create_videouserlink(
         db=db,
         videouserlink=schemas.VideoUserLinkCreate(

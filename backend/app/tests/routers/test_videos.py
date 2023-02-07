@@ -41,6 +41,54 @@ def setup_mock(mocker):
 
 """ Début des tests """
 # GET
+def test_get_last_ALL_GOOD():
+    response = client.get("/api/v2/videos/latest")
+    assert response.status_code == 200
+    assert len(response.json()) == 3
+    assert response.json()[0]["tweet_id"] == "111"
+    assert response.json()[2]["tweet_id"] == "222"
+    assert response.json()[1]["creator_screen_name"] == "creator_screen_name3"
+
+
+def test_get_last_ALL_GOOD_SKIP():
+    response = client.get("/api/v2/videos/latest?skip=1")
+    assert response.status_code == 200
+    assert len(response.json()) == 2
+    assert response.json()[1]["tweet_id"] == "222"
+    assert response.json()[0]["creator_screen_name"] == "creator_screen_name3"
+
+
+def test_get_last_ALL_GOOD_LIMIT():
+    response = client.get("/api/v2/videos/latest?limit=1")
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    assert response.json()[0]["tweet_id"] == "111"
+    assert response.json()[0]["creator_screen_name"] == "creator_screen_name"
+
+
+def test_get_last_ALL_GOOD_SKIP_LIMIT():
+    response = client.get("/api/v2/videos/latest?skip=1&limit=2")
+    assert response.status_code == 200
+    assert len(response.json()) == 2
+    assert response.json()[0]["tweet_id"] == "333"
+    assert response.json()[1]["tweet_id"] == "222"
+    assert response.json()[0]["creator_screen_name"] == "creator_screen_name3"
+
+
+def test_get_last_ALL_GOOD_SKIP_LIMIT_TOO_FAR():
+    response = client.get("/api/v2/videos/latest?skip=2&limit=2")
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    assert response.json()[0]["tweet_id"] == "222"
+    assert response.json()[0]["creator_screen_name"] == "creator_screen_name2"
+
+
+def test_get_last_NO_VIDEO_SKIP_LIMIT_TOO_FAR():
+    response = client.get("/api/v2/videos/latest?skip=3&limit=2")
+    assert response.status_code == 404
+    assert response.json() == {"detail": "No video"}
+
+
 def test_get_video_id_GOOD_VIDEO():
     response = client.get("/api/v2/videos/111")
     assert response.status_code == 200

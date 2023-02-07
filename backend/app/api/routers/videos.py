@@ -15,6 +15,34 @@ router = APIRouter(
 
 
 # GET
+@router.get("/latest", response_model=List[schemas.VideoWithTS])
+async def get_latest_videos(
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=12, ge=0, le=12),
+    db: Session = Depends(dependencies.get_db),
+):
+    """Get lastest video requested
+
+    Args:
+        skip (int, optional): Videos to skip. Defaults to Query(default=0, ge=0).
+        limit (int, optional): Videos to get. Defaults to Query(default=12, ge=0, le=12).
+        db (Session, optional): DB session. Defaults to Depends(dependencies.get_db).
+
+    Raises:
+        HTTPException: HTTP 404
+
+    Returns:
+        List[schemas.VideoWithTS]: List of schemas.VideoWithTS
+    """
+
+    db_videos_with_ts = crud_videos.get_last_videos_requested(
+        db=db, skip=skip, limit=limit
+    )
+    if not db_videos_with_ts:
+        raise HTTPException(status_code=404, detail="No video")
+    return db_videos_with_ts
+
+
 @router.get("/{video_id}", response_model=schemas.Video)
 async def read_video(
     video_id: str = Path(min_length=1, regex="^[0-9]*$"),
