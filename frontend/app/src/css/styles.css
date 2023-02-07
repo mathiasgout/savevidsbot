@@ -1,0 +1,12 @@
+body {
+    background: rgb(208,238,174);
+    background: radial-gradient(circle, rgba(208,238,174,1) 0%, rgba(148,230,233,1) 100%);
+}
+
+h1 {
+    font-family: 'Alfa Slab One', cursive;
+}
+
+span {
+    font-family: 'Alfa Slab One', cursive;
+}
