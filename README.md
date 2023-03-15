@@ -1,6 +1,6 @@
 # SaveVidsBot
 
-Projet arrêté car il n'y a plus de free tier de l'API twitter.
+Projet arrêté à cause des changements de l'API twitter.
 
 **LE DEVELOPPEMENT DE CETTE VERSION N'EST PAS TERMINÉ, VOIR BRANCHE `v1` POUR UNE VERSION FINALISÉE** 
 
@@ -15,28 +15,28 @@ Projet arrêté car il n'y a plus de free tier de l'API twitter.
 
 #### Bot
 - `bot/bot/.env`:
-    - `ADMIN_USERNAME: str`
-    - `ADMIN_PASSWORD: str`
-    - `URL_PREFIX: str`
-    - `API_PREFIX: str`
-    - `TRACK: str`
-    - `TWITTER_API_KEY: str`    
-    - `TWITTER_API_KEY_SECRET: str`
-    - `TWITTER_ACCESS_TOKEN: str`
-    - `TWITTER_ACCESS_TOKEN_SECRET: str`
+    - `ADMIN_USERNAME=<ADMIN USERNAME>`
+    - `ADMIN_PASSWORD:<ADMIN PASSWORD>`
+    - `URL_PREFIX=<URL PREFIX>` 
+    - `API_PREFIX=<API PREFIX>`
+    - `TRACK=<@ TO TRACK>`
+    - `TWITTER_API_KEY=<TWITTER API KEY>`    
+    - `TWITTER_API_KEY_SECRET=<TWITTER API KEY SECRET>`
+    - `TWITTER_ACCESS_TOKEN=<TWITTER ACCESS TOKEN>`
+    - `TWITTER_ACCESS_TOKEN_SECRET=<TWITTER ACCESS TOKEN SECRET>`
 
 #### Backend
 - `backend/app/.env`:
-    - `SECRET_KEY: str`
-    - `TWITTER_API_KEY: str`
-    - `TWITTER_API_KEY_SECRET: str`
-    - `TWITTER_ACCESS_TOKEN: str`
-    - `TWITTER_ACCESS_TOKEN_SECRET: str`
+    - `SECRET_KEY=<APP SECRET KEY>`
+    - `TWITTER_API_KEY=<TWITTER API KEY>`    
+    - `TWITTER_API_KEY_SECRET=<TWITTER API KEY SECRET>`
+    - `TWITTER_ACCESS_TOKEN=<TWITTER ACCESS TOKEN>`
+    - `TWITTER_ACCESS_TOKEN_SECRET=<TWITTER ACCESS TOKEN SECRET>`
 - `backend/app/database.ini`:
     - Fichier `.ini` avec une section nommée `[postgresql]`
     - La section `[postgresql]` a comme paramètres:
-        - `host: str`
-        - `port: int`
-        - `database: str`
-        - `user: str`
-        - `password: str`
+        - `host=<HOST>`
+        - `port=<PORT>`
+        - `database=<DB NAME>`
+        - `user=<USER NAME>`
+        - `password=<USER PASSWORD>`
