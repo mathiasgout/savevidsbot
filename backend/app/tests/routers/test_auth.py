@@ -17,7 +17,6 @@ client = TestClient(app)
 
 @pytest.fixture(scope="module", autouse=True)
 def create_and_remove_sample_db():
-
     db = next(overrided_dependencies.override_get_db())
 
     # Création des éléments des tables

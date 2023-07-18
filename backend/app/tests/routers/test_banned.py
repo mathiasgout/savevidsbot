@@ -17,7 +17,6 @@ client = TestClient(app)
 
 @pytest.fixture(scope="module", autouse=True)
 def create_and_remove_sample_db():
-
     db = next(overrided_dependencies.override_get_db())
 
     # Création des éléments des tables
@@ -46,6 +45,8 @@ def create_and_remove_sample_db():
 
 
 """ Début des tests """
+
+
 # GET
 def test_get_user_id_GOOD_USER():
     response = client.get("/api/v2/banned/111")

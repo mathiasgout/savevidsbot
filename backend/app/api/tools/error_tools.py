@@ -5,7 +5,6 @@ from functools import wraps
 
 
 def get_logger(logger_name: str) -> logging.Logger:
-
     # Création du logger
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)  # Modification du niveau de criticité du logger
